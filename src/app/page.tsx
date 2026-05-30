@@ -3,14 +3,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, HelpCircle, Activity, Award, User, RefreshCw } from 'lucide-react';
-import html2canvas from 'html2canvas';
 
 import questionsData from '../data/quiz-data.json';
 import { Question, Answers, ResultProfile } from '../types/quiz';
 import { calculateResults } from '../utils/personality';
 import QuizQuestion from '../components/QuizQuestion';
 import ResultCard from '../components/ResultCard';
-import ShareGraphic from '../components/ShareGraphic';
+import { renderPoster } from '../utils/renderPoster';
 
 const questions = questionsData as Question[];
 
@@ -137,42 +136,42 @@ export default function Home() {
     }
   };
 
-  const handleExport = () => {
+  const handleExport = async () => {
+    if (!resultProfile) return;
     setIsExporting(true);
     
-    // We give React 100ms to mount the ShareGraphic into the DOM and for Safari to paint it
-    setTimeout(async () => {
-      const element = document.getElementById('export-poster');
-      if (!element) {
-        setIsExporting(false);
-        return;
+    try {
+      // Render the poster using pure Canvas API (works on every browser!)
+      const imageDataUrl = renderPoster(resultProfile);
+      
+      // Convert to blob for native share
+      const response = await fetch(imageDataUrl);
+      const blob = await response.blob();
+      const filename = `${name.toLowerCase().replace(/\s+/g, '_')}-holy-trinity-matrix.png`;
+      const file = new File([blob], filename, { type: 'image/png' });
+      
+      // Try native share sheet (works on iPhone!)
+      if (navigator.share) {
+        try {
+          await navigator.share({ files: [file] });
+          setIsExporting(false);
+          return;
+        } catch (shareErr: any) {
+          // User cancelled = fine, other errors = show modal fallback
+          if (shareErr.name === 'AbortError') {
+            setIsExporting(false);
+            return;
+          }
+        }
       }
       
-      try {
-        const canvas = await html2canvas(element, {
-          scale: 1, 
-          useCORS: true,
-          backgroundColor: '#FAF6EE',
-          logging: false,
-          windowWidth: 1080,
-          windowHeight: 1920,
-          width: 1080,
-          height: 1920,
-        });
-        
-        const image = canvas.toDataURL('image/png', 1.0);
-        
-        try {
-          setExportModalImg(image);
-        } catch (shareErr) {
-          console.error(shareErr);
-        }
-      } catch (err) {
-        console.error('Error generating result image:', err);
-      } finally {
-        setIsExporting(false);
-      }
-    }, 150);
+      // Fallback: show modal with the image (for desktop or if share fails)
+      setExportModalImg(imageDataUrl);
+    } catch (err) {
+      console.error('Error generating poster:', err);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -370,33 +369,7 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        {/* The poster is ONLY mounted while exporting. 
-            It is z-[9998], so it sits perfectly ON TOP of everything, 
-            which forces Safari to paint it with no bugs. */}
-        {isExporting && resultProfile && (
-          <ShareGraphic profile={resultProfile} />
-        )}
 
-        {/* LOADING OVERLAY (z-[9999])
-            This covers the ShareGraphic so the user doesn't see the flash! */}
-        <AnimatePresence>
-          {isExporting && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center"
-            >
-              <Sparkles size={48} className="text-neo-lime animate-spin mb-6" style={{ animationDuration: '3s' }} />
-              <h2 className="text-3xl font-black uppercase text-white mb-2">
-                Generiere Poster...
-              </h2>
-              <p className="text-neo-lime font-mono uppercase tracking-widest text-sm font-bold">
-                Bitte kurz warten 📸
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* EXPORT MODAL FALLBACK */}
         <AnimatePresence>
