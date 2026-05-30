@@ -199,7 +199,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col flex-1 min-h-screen relative w-full px-4 py-8 md:py-16 justify-center items-center overflow-x-hidden">
+    <div className="flex flex-col flex-1 min-h-screen relative w-full px-4 py-4 sm:py-8 md:py-16 justify-center items-center overflow-x-hidden">
       
       {/* Neo-Brutalist Ambient Floating Background Items */}
       <div className="absolute top-10 left-10 w-16 h-16 bg-neo-pink border-4 border-black rotate-[12deg] shadow-brutal pointer-events-none hidden lg:block animate-float-slow"></div>

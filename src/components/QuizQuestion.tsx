@@ -62,9 +62,9 @@ export default React.memo(function QuizQuestion({
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col gap-6">
+    <div className="w-full max-w-2xl mx-auto flex flex-col gap-3 sm:gap-6">
       {/* Brutalist Progress Section */}
-      <div className="w-full border-4 border-black bg-white p-4 shadow-brutal flex flex-col gap-2 relative overflow-hidden">
+      <div className="w-full border-4 border-black bg-white p-3 sm:p-4 shadow-brutal flex flex-col gap-2 relative overflow-hidden">
         <div className="flex justify-between items-center font-mono font-black text-xs md:text-sm uppercase">
           <span className="flex items-center gap-1.5 text-black">
             <Sparkles size={16} className="text-neo-orange animate-spin shrink-0" style={{ animationDuration: '6s' }} />
@@ -76,7 +76,7 @@ export default React.memo(function QuizQuestion({
         </div>
         
         {/* Giant chunky progress tube */}
-        <div className="w-full h-8 bg-[#FAF6EE] border-4 border-black rounded-none relative overflow-hidden flex items-center">
+        <div className="w-full h-6 sm:h-8 bg-[#FAF6EE] border-4 border-black rounded-none relative overflow-hidden flex items-center">
           <motion.div
             className="h-full bg-neo-orange border-r-4 border-black"
             initial={{ width: 0 }}
@@ -98,9 +98,9 @@ export default React.memo(function QuizQuestion({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -50, opacity: 0 }}
           transition={{ type: "spring", damping: 15, stiffness: 100 }}
-          className="neo-card p-8 md:p-10 bg-white relative"
+          className="neo-card p-5 sm:p-8 md:p-10 bg-white relative"
         >
-          <p className="text-xl md:text-2xl font-black leading-snug text-black select-none">
+          <p className="text-[17px] sm:text-xl md:text-2xl font-black leading-snug text-black select-none">
             „{question.text}“
           </p>
         </motion.div>
@@ -114,7 +114,7 @@ export default React.memo(function QuizQuestion({
       )}
 
       {/* Answer Likert Scale Grid */}
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-5 mt-2">
+      <div className="grid grid-cols-1 gap-2 sm:gap-3 md:grid-cols-5 mt-1 sm:mt-2">
         {LIKERT_OPTIONS.map((opt) => {
           const isSelected = selectedValue === opt.value;
           return (
@@ -123,7 +123,7 @@ export default React.memo(function QuizQuestion({
               onClick={() => onSelect(opt.value)}
               whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.96, y: 2 }}
-              className={`neo-card flex md:flex-col items-center justify-between md:justify-center p-4 gap-2 text-left md:text-center transition-all cursor-pointer ${
+              className={`neo-card flex md:flex-col items-center justify-between md:justify-center p-2.5 px-4 sm:p-4 gap-2 text-left md:text-center transition-all cursor-pointer ${
                 isSelected 
                   ? `${opt.color} translate-x-1 translate-y-1 shadow-none` 
                   : 'bg-white hover:bg-neutral-50 shadow-brutal'
@@ -134,14 +134,14 @@ export default React.memo(function QuizQuestion({
               }}
               id={`likert-btn-${question.id}-${opt.value}`}
             >
-              <div className="text-3xl md:text-4xl filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] select-none">
+              <div className="text-2xl sm:text-3xl md:text-4xl filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] select-none">
                 {opt.emoji}
               </div>
               <div className="flex flex-col md:items-center">
-                <span className="font-mono font-black text-xs text-neutral-500 uppercase">
+                <span className="font-mono font-black text-[10px] sm:text-xs text-neutral-500 uppercase leading-none">
                   Punkt {opt.value}
                 </span>
-                <span className="font-black text-xs md:text-sm uppercase text-black leading-tight">
+                <span className="font-black text-[11px] sm:text-xs md:text-sm uppercase text-black leading-tight">
                   {opt.label}
                 </span>
               </div>
@@ -151,7 +151,7 @@ export default React.memo(function QuizQuestion({
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-2 sm:mt-4">
         {canGoBack ? (
           <motion.button
             onClick={onBack}
