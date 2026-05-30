@@ -1,0 +1,22 @@
+[
+  { "id": 1, "dimension": "Neurotizismus", "direction": "positive", "text": "Ich nehme mir soziale Interaktionen oft sehr zu Herzen und reflektiere intensiv über Gespräche." },
+  { "id": 2, "dimension": "Extraversion", "direction": "positive", "text": "In Gruppen bin ich oft die treibende Kraft, die andere motiviert und für gute Stimmung sorgt." },
+  { "id": 3, "dimension": "Verträglichkeit", "direction": "negative", "text": "Wenn mir das Verhalten von jemandem missfällt, kommuniziere ich meine Distanz klar und direkt." },
+  { "id": 4, "dimension": "Gewissenhaftigkeit", "direction": "negative", "text": "Ich bin spontan, lebe gerne im Moment und fühle mich in dynamischen Situationen wohler als in starren Strukturen." },
+  { "id": 5, "dimension": "Offenheit", "direction": "positive", "text": "Ich drücke mich gerne individuell aus und schätze ausgefallene Styles, Kunstrichtungen oder Musik abseits des Mainstreams." },
+  { "id": 6, "dimension": "Neurotizismus", "direction": "positive", "text": "Nach einem Streit oder Missverständnis beschäftigt mich das innerlich lange und ich spiele die Situation immer wieder im Kopf durch." },
+  { "id": 7, "dimension": "Extraversion", "direction": "positive", "text": "Ich fühle mich wohl, wenn ich die Aufmerksamkeit auf mich ziehe, und blühe im Scheinwerferlicht richtig auf." },
+  { "id": 8, "dimension": "Verträglichkeit", "direction": "positive", "text": "Ich bin extrem empathisch und stelle meine eigenen Bedürfnisse häufig hinten an." },
+  { "id": 9, "dimension": "Gewissenhaftigkeit", "direction": "positive", "text": "Ich habe meine Finanzen, Termine und Verpflichtungen gut im Griff." },
+  { "id": 10, "dimension": "Neurotizismus", "direction": "negative", "text": "Ich besitze ein extrem dickes Fell und emotionale Reize prallen relativ wenig an mir ab." },
+  { "id": 11, "dimension": "Extraversion", "direction": "negative", "text": "Ich bin im sozialen Kontext eher zurückhaltend, beobachte erst mal und brauche viel Social-Battery-Regeneration." },
+  { "id": 12, "dimension": "Verträglichkeit", "direction": "negative", "text": "Ich bin anspruchsvoll, schwer zu beeindrucken und fordere von meinem Umfeld exzellenten Standard." },
+  { "id": 13, "dimension": "Gewissenhaftigkeit", "direction": "negative", "text": "Ich schätze zeitliche Flexibilität sehr und empfinde Termine eher als flexiblen Richtwert denn als starre Verpflichtung." },
+  { "id": 14, "dimension": "Neurotizismus", "direction": "positive", "text": "Vor wichtigen Ereignissen mache ich mir viele Gedanken und spüre eine deutliche innere Anspannung." },
+  { "id": 15, "dimension": "Extraversion", "direction": "positive", "text": "Ich bin extrem gesellig und gehe proaktiv auf fremde Menschen zu, ohne große Berührungsängste." },
+  { "id": 16, "dimension": "Verträglichkeit", "direction": "positive", "text": "Ich versuche immer, dass sich jeder in meiner Gegenwart maximal wohl und abgeholt fühlt." },
+  { "id": 17, "dimension": "Gewissenhaftigkeit", "direction": "positive", "text": "Ich arbeite extrem zielorientiert, präzise und überlasse nur sehr wenig dem Zufall." },
+  { "id": 18, "dimension": "Offenheit", "direction": "positive", "text": "Ich hinterfrage ständig gesellschaftliche Normen und suche gezielt nach tiefgründigen, komplexen Erfahrungen." },
+  { "id": 19, "dimension": "Neurotizismus", "direction": "positive", "text": "Spontane Änderungen an festen Plänen verunsichern mich und erfordern von mir emotionale Anpassung." },
+  { "id": 20, "dimension": "Verträglichkeit", "direction": "negative", "text": "Ich habe kein Problem damit, Leuten direkt ins Gesicht zu sagen, was ich von ihnen halte, auch wenn es wehtut." }
+]
