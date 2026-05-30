@@ -10,6 +10,7 @@ import { Question, Answers, ResultProfile } from '../types/quiz';
 import { calculateResults } from '../utils/personality';
 import QuizQuestion from '../components/QuizQuestion';
 import ResultCard from '../components/ResultCard';
+import ShareGraphic from '../components/ShareGraphic';
 
 const questions = questionsData as Question[];
 
@@ -137,58 +138,37 @@ export default function Home() {
   };
 
   const handleExport = async () => {
-    const element = document.getElementById('share-card');
+    const element = document.getElementById('export-poster');
     if (!element) return;
     
     setIsExporting(true);
-    
-    // Save original styles to restore after capture
-    const originalStyle = element.getAttribute('style') || '';
-    
-    // Move card off-screen at a mobile width (540px) to force a stacked layout.
-    // scale: 2 in html2canvas will make it exactly 1080px wide (perfect for Instagram)
-    element.style.cssText = 'width:540px; height:960px; min-height:960px; display:flex; flex-direction:column; justify-content:center; position:absolute; left:-9999px; top:0;';
     
     // Force sync layout reflow
     void element.offsetHeight;
     
     try {
       const canvas = await html2canvas(element, {
-        scale: 2, // 540 * 2 = 1080px (Ultra high quality mobile aspect ratio)
+        scale: 1, 
         useCORS: true,
         backgroundColor: '#FAF6EE',
         logging: false,
-        windowWidth: 540,
-        windowHeight: 960,
-        height: 960,
+        windowWidth: 1080,
+        windowHeight: 1920,
+        width: 1080,
+        height: 1920,
       });
       
       const image = canvas.toDataURL('image/png', 1.0);
       
       try {
-        const response = await fetch(image);
-        const blob = await response.blob();
-        const filename = `${name.toLowerCase().replace(/\s+/g, '_')}-holy-trinity-matrix.png`;
-        const file = new File([blob], filename, { type: 'image/png' });
-        
-        if (navigator.share) {
-          await navigator.share({
-            files: [file]
-          });
-        } else {
-          throw new Error("Share API not available");
-        }
+        // ALWAYS show the modal. It's the only 100% reliable way on all iOS versions.
+        setExportModalImg(image);
       } catch (shareErr: any) {
-        if (shareErr.name !== 'AbortError') {
-          // If share fails or is denied, show our bulletproof modal!
-          setExportModalImg(image);
-        }
+        console.error(shareErr);
       }
     } catch (err) {
       console.error('Error generating result image:', err);
     } finally {
-      // Restore original styles — card returns to normal position
-      element.setAttribute('style', originalStyle);
       setIsExporting(false);
     }
   };
@@ -384,6 +364,7 @@ export default function Home() {
                 onExport={handleExport}
                 isExporting={isExporting}
               />
+              <ShareGraphic profile={resultProfile} />
             </motion.div>
           )}
         </AnimatePresence>

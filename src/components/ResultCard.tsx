@@ -88,7 +88,6 @@ function ResultCardComponent({
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-8 pb-12">
       {/* EXPORT CONTAINER (This specific block will be screenshotted by html2canvas) */}
       <div 
-        id="share-card" 
         className="w-full bg-[#FAF6EE] border-8 border-black p-5 md:p-12 flex flex-col gap-6 md:gap-10 relative overflow-hidden select-none"
         style={{ fontFamily: 'var(--font-sans)' }}
       >
@@ -154,7 +153,7 @@ function ResultCardComponent({
             </div>
 
             {/* Detailed Big 5 Breakdown */}
-            <div data-html2canvas-ignore="true" className="border-4 border-black bg-white p-5 md:p-8 shadow-brutal flex flex-col gap-4 md:gap-6">
+            <div className="border-4 border-black bg-white p-5 md:p-8 shadow-brutal flex flex-col gap-4 md:gap-6">
               <h4 className="font-mono font-black text-sm uppercase tracking-wider text-black flex items-center gap-2 border-b-2 border-black pb-2 select-none">
                 <AlertCircle size={16} />
                 Psychometrisches BFI-20 Protokoll
