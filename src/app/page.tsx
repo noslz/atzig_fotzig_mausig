@@ -144,19 +144,19 @@ export default function Home() {
     // Save original styles to restore after capture
     const originalStyle = element.getAttribute('style') || '';
     
-    // Move card off-screen at desktop width for consistent high-quality export
-    // This prevents the jarring layout flash visible on mobile devices
-    element.style.cssText = 'width:880px;min-width:880px;position:absolute;left:-9999px;top:0;';
+    // Move card off-screen at a mobile width (540px) to force a stacked layout.
+    // scale: 2 in html2canvas will make it exactly 1080px wide (perfect for Instagram)
+    element.style.cssText = 'width:540px; min-height:960px; display:flex; flex-direction:column; justify-content:center; position:absolute; left:-9999px; top:0;';
     
     // Allow layout reflow (400ms for older devices)
     setTimeout(async () => {
       try {
         const canvas = await html2canvas(element, {
-          scale: 2.5, // Ultra high quality
+          scale: 2, // 540 * 2 = 1080px (Ultra high quality mobile aspect ratio)
           useCORS: true,
           backgroundColor: '#FAF6EE',
           logging: false,
-          windowWidth: 1200,
+          windowWidth: 540,
         });
         
         const image = canvas.toDataURL('image/png', 1.0);

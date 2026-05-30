@@ -89,7 +89,7 @@ function ResultCardComponent({
       {/* EXPORT CONTAINER (This specific block will be screenshotted by html2canvas) */}
       <div 
         id="share-card" 
-        className="w-full bg-[#FAF6EE] border-8 border-black p-8 md:p-12 flex flex-col gap-10 relative overflow-hidden select-none"
+        className="w-full bg-[#FAF6EE] border-8 border-black p-5 md:p-12 flex flex-col gap-6 md:gap-10 relative overflow-hidden select-none"
         style={{ fontFamily: 'var(--font-sans)' }}
       >
         {/* Retro Diagonal Stripe Border Overlay for Neo-Brutalist look */}
@@ -97,12 +97,12 @@ function ResultCardComponent({
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-neo-pink opacity-10 -rotate-45 transform -translate-x-8 translate-y-8 border-4 border-black pointer-events-none"></div>
 
         {/* Card Header Stamp */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-4 border-black pb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-4 border-black pb-4 md:pb-8">
           <div>
             <span className="font-mono font-black bg-black text-white text-xs px-2 py-1 uppercase tracking-widest select-none">
               Offizielle Auswertung
             </span>
-            <h2 className="text-3xl md:text-5xl font-black uppercase text-black mt-2 leading-none tracking-tight select-none">
+            <h2 className="text-2xl md:text-5xl font-black uppercase text-black mt-2 leading-none tracking-tight select-none">
               Die Matrix-Aura
             </h2>
           </div>
@@ -116,7 +116,7 @@ function ResultCardComponent({
         </div>
 
         {/* Main Grid: Ternary Plot on Left, Text Archetype details on Right */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 items-start mt-2 md:mt-0">
           
           {/* Left Column: Ternary Matrix Grid (Col Span 5) */}
           <div className="md:col-span-5 flex justify-center w-full">
@@ -132,29 +132,29 @@ function ResultCardComponent({
           <div className="md:col-span-7 flex flex-col gap-6 w-full">
             
             {/* The Main Badge & Combination Name */}
-            <div className={`border-4 border-black p-8 md:p-10 ${colorTheme.bg} shadow-brutal flex flex-col gap-3 relative overflow-visible`}>
+            <div className={`border-4 border-black p-5 md:p-10 ${colorTheme.bg} shadow-brutal flex flex-col gap-2 md:gap-3 relative overflow-visible`}>
               {/* Clean absolute badge label floating above the border */}
-              <div className="absolute -top-6 right-6 bg-black text-white border-4 border-black px-5 py-1.5 text-sm md:text-base font-mono font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] select-none">
+              <div className="absolute -top-5 right-3 sm:right-4 md:-top-6 md:right-6 bg-black text-white border-4 border-black px-3 py-1 md:px-5 md:py-1.5 text-[11px] sm:text-xs md:text-base font-mono font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] select-none whitespace-nowrap">
                 Hauptvibe: {getArchetypeLabel(primaryArchetype)}
               </div>
 
               <span className="font-mono text-xs font-black text-neutral-500 uppercase tracking-widest select-none">
                 Dein Charakter-Typ:
               </span>
-              <h3 className="text-3xl md:text-5xl font-black text-black leading-none uppercase tracking-tight select-none">
+              <h3 className="text-[22px] sm:text-3xl md:text-5xl font-black text-black leading-none uppercase tracking-tight select-none break-words hyphens-auto" lang="de">
                 „{hybridTitle}“
               </h3>
               
               {/* Description Body — rendered via safe parser, no dangerouslySetInnerHTML */}
               <div className="mt-3 text-black">
-                <p className="text-sm md:text-base font-semibold leading-relaxed">
+                <p className="text-[13px] md:text-base font-semibold leading-relaxed">
                   {renderSafeHTML(hybridDescription)}
                 </p>
               </div>
             </div>
 
             {/* Detailed Big 5 Breakdown */}
-            <div className="border-4 border-black bg-white p-8 shadow-brutal flex flex-col gap-6">
+            <div data-html2canvas-ignore="true" className="border-4 border-black bg-white p-5 md:p-8 shadow-brutal flex flex-col gap-4 md:gap-6">
               <h4 className="font-mono font-black text-sm uppercase tracking-wider text-black flex items-center gap-2 border-b-2 border-black pb-2 select-none">
                 <AlertCircle size={16} />
                 Psychometrisches BFI-20 Protokoll
@@ -184,7 +184,7 @@ function ResultCardComponent({
                       </div>
                       
                       {/* Heavy progress bar border */}
-                      <div className="w-full h-6 bg-[#FAF6EE] border-4 border-black rounded-none relative overflow-hidden flex items-center">
+                      <div className="w-full h-4 md:h-6 bg-[#FAF6EE] border-4 border-black rounded-none relative overflow-hidden flex items-center">
                         <div 
                           className={`h-full ${barColor} border-r-4 border-black`}
                           style={{ width: `${percent}%` }}
