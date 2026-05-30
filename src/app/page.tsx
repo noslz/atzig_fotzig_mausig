@@ -51,6 +51,7 @@ export default function Home() {
   const [loadingMsg, setLoadingMsg] = useState(LOADING_MESSAGES[0]);
   const [resultProfile, setResultProfile] = useState<ResultProfile | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [exportModalImg, setExportModalImg] = useState<string | null>(null);
 
   // Form validation
   const isNameValid = name.trim().length >= 2;
@@ -146,56 +147,50 @@ export default function Home() {
     
     // Move card off-screen at a mobile width (540px) to force a stacked layout.
     // scale: 2 in html2canvas will make it exactly 1080px wide (perfect for Instagram)
-    element.style.cssText = 'width:540px; min-height:960px; display:flex; flex-direction:column; justify-content:center; position:absolute; left:-9999px; top:0;';
+    element.style.cssText = 'width:540px; height:960px; min-height:960px; display:flex; flex-direction:column; justify-content:center; position:absolute; left:-9999px; top:0;';
     
-    // Allow layout reflow (400ms for older devices)
-    setTimeout(async () => {
+    // Force sync layout reflow
+    void element.offsetHeight;
+    
+    try {
+      const canvas = await html2canvas(element, {
+        scale: 2, // 540 * 2 = 1080px (Ultra high quality mobile aspect ratio)
+        useCORS: true,
+        backgroundColor: '#FAF6EE',
+        logging: false,
+        windowWidth: 540,
+        windowHeight: 960,
+        height: 960,
+      });
+      
+      const image = canvas.toDataURL('image/png', 1.0);
+      
       try {
-        const canvas = await html2canvas(element, {
-          scale: 2, // 540 * 2 = 1080px (Ultra high quality mobile aspect ratio)
-          useCORS: true,
-          backgroundColor: '#FAF6EE',
-          logging: false,
-          windowWidth: 540,
-        });
-        
-        const image = canvas.toDataURL('image/png', 1.0);
-        
-        // Convert to Blob for Web Share API
         const response = await fetch(image);
         const blob = await response.blob();
         const filename = `${name.toLowerCase().replace(/\s+/g, '_')}-holy-trinity-matrix.png`;
         const file = new File([blob], filename, { type: 'image/png' });
         
-        // Try native Web Share API first (great for mobile)
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({
-              title: 'Meine Holy Trinity Matrix',
-              text: 'Ich hab den Vibe-Check gemacht! Bist du atzig, mausig oder fotzig?',
-              files: [file]
-            });
-          } catch (shareErr: any) {
-            // Ignore abort errors (user cancelled share)
-            if (shareErr.name !== 'AbortError') {
-              throw shareErr;
-            }
-          }
+        if (navigator.share) {
+          await navigator.share({
+            files: [file]
+          });
         } else {
-          // Fallback: Download file
-          const link = document.createElement('a');
-          link.download = filename;
-          link.href = image;
-          link.click();
+          throw new Error("Share API not available");
         }
-      } catch (err) {
-        console.error('Error generating result image:', err);
-      } finally {
-        // Restore original styles — card returns to normal position
-        element.setAttribute('style', originalStyle);
-        setIsExporting(false);
+      } catch (shareErr: any) {
+        if (shareErr.name !== 'AbortError') {
+          // If share fails or is denied, show our bulletproof modal!
+          setExportModalImg(image);
+        }
       }
-    }, 400);
+    } catch (err) {
+      console.error('Error generating result image:', err);
+    } finally {
+      // Restore original styles — card returns to normal position
+      element.setAttribute('style', originalStyle);
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -389,6 +384,34 @@ export default function Home() {
                 onExport={handleExport}
                 isExporting={isExporting}
               />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* EXPORT MODAL FALLBACK */}
+        <AnimatePresence>
+          {exportModalImg && (
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+              onClick={() => setExportModalImg(null)}
+            >
+              <div className="flex flex-col gap-4 max-w-[400px] w-full" onClick={e => e.stopPropagation()}>
+                <div className="bg-neo-lime border-4 border-black p-4 text-center font-black uppercase text-sm md:text-base leading-snug">
+                  👇 Halte das Bild gedrückt, um es zu speichern oder direkt zu kopieren!
+                </div>
+                <div className="w-full relative overflow-hidden rounded-xl border-4 border-black shadow-brutal bg-white">
+                  <img src={exportModalImg} alt="Shareable Matrix" className="w-full h-auto" />
+                </div>
+                <button 
+                  onClick={() => setExportModalImg(null)}
+                  className="neo-btn bg-white w-full py-4 text-lg mt-2"
+                >
+                  Schließen
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
