@@ -137,40 +137,42 @@ export default function Home() {
     }
   };
 
-  const handleExport = async () => {
-    const element = document.getElementById('export-poster');
-    if (!element) return;
-    
+  const handleExport = () => {
     setIsExporting(true);
     
-    // Force sync layout reflow
-    void element.offsetHeight;
-    
-    try {
-      const canvas = await html2canvas(element, {
-        scale: 1, 
-        useCORS: true,
-        backgroundColor: '#FAF6EE',
-        logging: false,
-        windowWidth: 1080,
-        windowHeight: 1920,
-        width: 1080,
-        height: 1920,
-      });
-      
-      const image = canvas.toDataURL('image/png', 1.0);
+    // We give React 100ms to mount the ShareGraphic into the DOM and for Safari to paint it
+    setTimeout(async () => {
+      const element = document.getElementById('export-poster');
+      if (!element) {
+        setIsExporting(false);
+        return;
+      }
       
       try {
-        // ALWAYS show the modal. It's the only 100% reliable way on all iOS versions.
-        setExportModalImg(image);
-      } catch (shareErr: any) {
-        console.error(shareErr);
+        const canvas = await html2canvas(element, {
+          scale: 1, 
+          useCORS: true,
+          backgroundColor: '#FAF6EE',
+          logging: false,
+          windowWidth: 1080,
+          windowHeight: 1920,
+          width: 1080,
+          height: 1920,
+        });
+        
+        const image = canvas.toDataURL('image/png', 1.0);
+        
+        try {
+          setExportModalImg(image);
+        } catch (shareErr) {
+          console.error(shareErr);
+        }
+      } catch (err) {
+        console.error('Error generating result image:', err);
+      } finally {
+        setIsExporting(false);
       }
-    } catch (err) {
-      console.error('Error generating result image:', err);
-    } finally {
-      setIsExporting(false);
-    }
+    }, 150);
   };
 
   return (
@@ -364,7 +366,34 @@ export default function Home() {
                 onExport={handleExport}
                 isExporting={isExporting}
               />
-              <ShareGraphic profile={resultProfile} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* The poster is ONLY mounted while exporting. 
+            It is z-[9998], so it sits perfectly ON TOP of everything, 
+            which forces Safari to paint it with no bugs. */}
+        {isExporting && resultProfile && (
+          <ShareGraphic profile={resultProfile} />
+        )}
+
+        {/* LOADING OVERLAY (z-[9999])
+            This covers the ShareGraphic so the user doesn't see the flash! */}
+        <AnimatePresence>
+          {isExporting && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center"
+            >
+              <Sparkles size={48} className="text-neo-lime animate-spin mb-6" style={{ animationDuration: '3s' }} />
+              <h2 className="text-3xl font-black uppercase text-white mb-2">
+                Generiere Poster...
+              </h2>
+              <p className="text-neo-lime font-mono uppercase tracking-widest text-sm font-bold">
+                Bitte kurz warten 📸
+              </p>
             </motion.div>
           )}
         </AnimatePresence>

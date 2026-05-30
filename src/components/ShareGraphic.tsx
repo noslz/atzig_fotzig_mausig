@@ -10,10 +10,10 @@ interface ShareGraphicProps {
 
 export default function ShareGraphic({ profile }: ShareGraphicProps) {
   return (
-    <div className="fixed top-0 left-0 w-0 h-0 overflow-hidden pointer-events-none z-[-9999]">
+    <div className="fixed top-0 left-0 w-[1080px] h-[1920px] pointer-events-none z-[9998]">
       <div 
         id="export-poster"
-        className="bg-[#FAF6EE] flex flex-col items-center justify-between overflow-hidden"
+        className="bg-[#FAF6EE] flex flex-col items-center justify-between overflow-hidden w-[1080px] h-[1920px]"
         style={{ width: '1080px', height: '1920px', padding: '100px 80px' }}
       >
       {/* Background Graphic Elements */}
