@@ -10,11 +10,12 @@ interface ShareGraphicProps {
 
 export default function ShareGraphic({ profile }: ShareGraphicProps) {
   return (
-    <div 
-      id="export-poster"
-      className="absolute top-0 left-[-9999px] bg-[#FAF6EE] flex flex-col items-center justify-between overflow-hidden"
-      style={{ width: '1080px', height: '1920px', padding: '100px 80px' }}
-    >
+    <div className="fixed top-0 left-0 w-0 h-0 overflow-hidden pointer-events-none z-[-9999]">
+      <div 
+        id="export-poster"
+        className="bg-[#FAF6EE] flex flex-col items-center justify-between overflow-hidden"
+        style={{ width: '1080px', height: '1920px', padding: '100px 80px' }}
+      >
       {/* Background Graphic Elements */}
       <div className="absolute top-20 left-10 w-40 h-40 bg-neo-pink border-[8px] border-black rotate-[15deg] opacity-80" />
       <div className="absolute bottom-40 right-10 w-60 h-60 bg-neo-lime border-[8px] border-black rounded-full -rotate-[15deg] opacity-80" />
@@ -70,6 +71,7 @@ export default function ShareGraphic({ profile }: ShareGraphicProps) {
       <div className="z-10 mt-auto text-center font-mono text-[30px] font-black uppercase text-black/50 tracking-widest">
         Mach den Test auf atzigfotzigmausig.vercel.app
       </div>
+    </div>
     </div>
   );
 }
