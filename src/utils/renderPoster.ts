@@ -61,7 +61,7 @@ export function renderPoster(profile: ResultProfile): string {
   ctx.fillText('DIE MATRIX-AURA', W / 2, 220);
 
   // ── Name badge ──
-  const nameText = `PROFIL-ID: ${profile.name.toUpperCase()}`;
+  const nameText = profile.name.toUpperCase();
   ctx.font = '900 38px monospace';
   const nameWidth = ctx.measureText(nameText).width + 60;
   const nameX = (W - nameWidth) / 2;

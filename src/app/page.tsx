@@ -32,6 +32,14 @@ export default function Home() {
     return 'welcome';
   });
   
+  const [shareSupported, setShareSupported] = useState(false);
+  
+  useEffect(() => {
+    if (typeof navigator !== 'undefined' && !!navigator.share) {
+      setShareSupported(true);
+    }
+  }, []);
+
   // Quiz State
   const [name, setName] = useState(() => {
     if (typeof window !== 'undefined') return sessionStorage.getItem('ht_name') || '';
@@ -144,33 +152,40 @@ export default function Home() {
       // Render the poster using pure Canvas API (works on every browser!)
       const imageDataUrl = renderPoster(resultProfile);
       
-      // Convert to blob for native share
-      const response = await fetch(imageDataUrl);
-      const blob = await response.blob();
-      const filename = `${name.toLowerCase().replace(/\s+/g, '_')}-holy-trinity-matrix.png`;
-      const file = new File([blob], filename, { type: 'image/png' });
-      
-      // Try native share sheet (works on iPhone!)
-      if (navigator.share) {
-        try {
-          await navigator.share({ files: [file] });
-          setIsExporting(false);
-          return;
-        } catch (shareErr: any) {
-          // User cancelled = fine, other errors = show modal fallback
-          if (shareErr.name === 'AbortError') {
-            setIsExporting(false);
-            return;
-          }
-        }
-      }
-      
-      // Fallback: show modal with the image (for desktop or if share fails)
+      // Always show the modal preview first
       setExportModalImg(imageDataUrl);
     } catch (err) {
       console.error('Error generating poster:', err);
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleShareImage = async () => {
+    if (!exportModalImg || !resultProfile) return;
+    
+    try {
+      // Convert to blob for native share
+      const response = await fetch(exportModalImg);
+      const blob = await response.blob();
+      const filename = `${name.toLowerCase().replace(/\s+/g, '_')}-holy-trinity-matrix.png`;
+      const file = new File([blob], filename, { type: 'image/png' });
+      
+      if (navigator.share) {
+        await navigator.share({
+          files: [file],
+          title: 'Atzig Fotzig Mausig Matrix Aura',
+          text: 'Mein Atzig Fotzig Mausig Testergebnis! 🤪🐀💅',
+        });
+      } else {
+        // Fallback: trigger download
+        const link = document.createElement('a');
+        link.href = exportModalImg;
+        link.download = filename;
+        link.click();
+      }
+    } catch (err) {
+      console.error('Error sharing/downloading image:', err);
     }
   };
 
@@ -371,29 +386,54 @@ export default function Home() {
 
 
 
-        {/* EXPORT MODAL FALLBACK */}
+        {/* EXPORT MODAL / PREVIEW */}
         <AnimatePresence>
           {exportModalImg && (
             <motion.div 
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }} 
-              className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto"
               onClick={() => setExportModalImg(null)}
             >
-              <div className="flex flex-col gap-4 max-w-[400px] w-full" onClick={e => e.stopPropagation()}>
-                <div className="bg-neo-lime border-4 border-black p-4 text-center font-black uppercase text-sm md:text-base leading-snug">
-                  👇 Halte das Bild gedrückt, um es zu speichern oder direkt zu kopieren!
+              <div 
+                className="flex flex-col gap-3 max-w-[420px] w-full bg-white border-8 border-black p-5 shadow-brutal select-none my-8" 
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="text-center flex flex-col gap-1 border-b-4 border-black pb-3">
+                  <h3 className="text-xl font-black uppercase text-black">Dein Share-Bild</h3>
+                  <p className="text-xs font-bold text-neutral-500">
+                    So sieht deine Aura-Card aus! Teile sie direkt mit deinen Atzen.
+                  </p>
                 </div>
-                <div className="w-full relative overflow-hidden rounded-xl border-4 border-black shadow-brutal bg-white">
-                  <img src={exportModalImg} alt="Shareable Matrix" className="w-full h-auto" />
+                
+                <div className="w-full relative overflow-hidden border-4 border-black bg-[#FAF6EE] flex items-center justify-center p-2">
+                  <img 
+                    src={exportModalImg} 
+                    alt="Shareable Matrix" 
+                    className="max-h-[48vh] sm:max-h-[50vh] w-auto object-contain border-2 border-black" 
+                  />
                 </div>
-                <button 
-                  onClick={() => setExportModalImg(null)}
-                  className="neo-btn bg-white w-full py-4 text-lg mt-2"
-                >
-                  Schließen
-                </button>
+                
+                <p className="text-[10px] font-bold text-neutral-600 bg-neutral-100 border-2 border-black p-2 text-center leading-snug">
+                  💡 Tipp: Du kannst das Bild gedrückt halten (Handy) oder rechtsklicken (Desktop), um es direkt zu speichern oder in die Zwischenablage zu kopieren!
+                </p>
+
+                <div className="flex flex-col gap-2 mt-2">
+                  <button 
+                    onClick={handleShareImage}
+                    className="neo-btn bg-neo-lime w-full py-3 text-base flex items-center justify-center gap-2 font-black uppercase"
+                  >
+                    {shareSupported ? 'Jetzt teilen 🚀' : 'Bild herunterladen 💾'}
+                  </button>
+                  
+                  <button 
+                    onClick={() => setExportModalImg(null)}
+                    className="neo-btn bg-white w-full py-3 text-base font-black uppercase"
+                  >
+                    Schließen
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}

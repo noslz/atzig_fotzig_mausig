@@ -107,9 +107,9 @@ function ResultCardComponent({
           </div>
           
           <div className="border-4 border-black bg-white p-3 flex flex-col items-end rotate-[1.5deg] shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-            <span className="font-mono text-xs font-black text-neutral-400">PROFIL-ID</span>
+            <span className="font-mono text-xs font-black text-neutral-400">NAME</span>
             <span className="font-mono text-base font-black text-black tracking-wider">
-              #{name.toUpperCase()}-{Math.floor(scores.atzig)}{Math.floor(scores.mausig)}{Math.floor(scores.fotzig)}
+              {name.toUpperCase()}
             </span>
           </div>
         </div>
